@@ -1,0 +1,182 @@
+/* ============================================ */
+/* style.css — Estilos do Chat WebSocket         */
+/* ============================================ */
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fundo da página */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Container principal do chat */
+#chat-container {
+  width: 100%;
+  max-width: 650px;
+  height: 85vh;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Título */
+#chat-container h1 {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  text-align: center;
+  padding: 16px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Área de mensagens */
+#messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Mensagem de chat (usuário) */
+.chat-message {
+  background: #ffffff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  font-size: 0.95rem;
+  color: #333;
+  word-break: break-word;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Mensagem de sistema (entrada/saída) */
+.system-message {
+  text-align: center;
+  padding: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+  font-style: italic;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Área de inputs */
+#input-area {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  flex-wrap: wrap;
+}
+
+/* Campos de texto */
+#name {
+  width: 25%;
+  min-width: 100px;
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+#message {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+#name:focus,
+#message:focus {
+  border-color: #667eea;
+}
+
+/* Botão de enviar */
+#send-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
+}
+
+#send-btn:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
+}
+
+#send-btn:active {
+  transform: scale(0.97);
+}
+
+/* Status da conexão */
+#status {
+  text-align: center;
+  padding: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: #fafafa;
+  border-top: 1px solid #e0e0e0;
+  color: #ff9800;
+}
+
+/* Animação de entrada das mensagens */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Barra de rolagem estilizada */
+#messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+#messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#messages::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 3px;
+}
+
+#messages::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
