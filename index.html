@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>💬 Chat em Tempo Real</title>
+</head>
+<body>
+
+    <div id="chat-container">
+        <h1>💬 Chat WebSocket</h1>
+
+        <div id="messages"></div>
+
+        <div id="input-area">
+            <input 
+                type="text" 
+                id="name" 
+                placeholder="👤 Seu nome" 
+                maxlength="20"
+            >
+            <input 
+                type="text" 
+                id="message" 
+                placeholder="✏️ Sua mensagem" 
+                maxlength="500"
+            >
+            <button id="send-btn">📨 Enviar</button>
+        </div>
+
+        <div id="status">🔌 Conectando ao servidor...</div>
+    </div>
+
+    <script>
+        // ============================================
+        // Conexão WebSocket com o servidor
+        // ============================================
+        const ws = new WebSocket('ws://localhost:8081');
+
+        // Pegando os elementos da tela
+        const messagesDiv = document.getElementById('messages');
+        const nameInput = document.getElementById('name');
+        const messageInput = document.getElementById('message');
+        const sendBtn = document.getElementById('send-btn');
+        const statusDiv = document.getElementById('status');
+
+        // ============================================
+        // EVENTO: Conexão estabelecida com sucesso
+        // ============================================
+        ws.onopen = () => {
+            console.log('✅ Conectado ao servidor WebSocket');
+            statusDiv.textContent = '🟢 Conectado ao chat';
+            statusDiv.style.color = '#4caf50';
+        };
+
+        // ============================================
+        // EVENTO: Mensagem recebida do servidor
+        // ============================================
+        ws.onmessage = (event) => {
+            const texto = event.data;
+
+            // Cria um elemento <p> para a mensagem
+            const paragrafo = document.createElement('p');
+
+            // Se for mensagem de sistema (entrada/saída), estiliza diferente
+            if (texto.startsWith('🔵') || texto.startsWith('🔴')) {
+                paragrafo.classList.add('system-message');
+            } else {
+                paragrafo.classList.add('chat-message');
+            }
+
+            paragrafo.textContent = texto;
+            messagesDiv.appendChild(paragrafo);
+
+            // Rolagem automática para a mensagem mais recente
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        };
+
+        // ============================================
+        // EVENTO: Erro na conexão
+        // ============================================
+        ws.onerror = (erro) => {
+            console.error('⚠️ Erro no WebSocket:', erro);
+            statusDiv.textContent = '🔴 Erro na conexão com o servidor';
+            statusDiv.style.color = '#f44336';
+        };
+
+        // ============================================
+        // EVENTO: Conexão fechada
+        // ============================================
+        ws.onclose = () => {
+            console.log('❌ Conexão WebSocket fechada');
+            statusDiv.textContent = '🔌 Desconectado do servidor';
+            statusDiv.style.color = '#ff9800';
+        };
+
+        // ============================================
+        // FUNÇÃO: Enviar mensagem
+        // ============================================
+        function sendMessage() {
+            const nome = nameInput.value.trim();
+            const mensagem = messageInput.value.trim();
+
+            // Verifica se os campos estão preenchidos
+            if (!nome) {
+                alert('⚠️ Por favor, digite seu nome.');
+                nameInput.focus();
+                return;
+            }
+
+            if (!mensagem) {
+                alert('⚠️ Por favor, digite uma mensagem.');
+                messageInput.focus();
+                return;
+            }
+
+            // Verifica se o WebSocket está aberto
+            if (ws.readyState !== WebSocket.OPEN) {
+                alert('⚠️ Conexão perdida. Recarregue a página.');
+                return;
+            }
+
+            // Envia no formato "Nome: mensagem"
+            ws.send(`${nome}: ${mensagem}`);
+
+            // Limpa o campo de mensagem e mantém o foco
+            messageInput.value = '';
+            messageInput.focus();
+        }
+
+        // ============================================
+        // LISTENERS: Clique no botão e tecla Enter
+        // ============================================
+        sendBtn.addEventListener('click', sendMessage);
+
+        messageInput.addEventListener('keydown', (evento) => {
+            if (evento.key === 'Enter') {
+                evento.preventDefault(); // Impede quebra de linha
+                sendMessage();
+            }
+        });
+
+        // Também permite enviar com Enter no campo de nome
+        nameInput.addEventListener('keydown', (evento) => {
+            if (evento.key === 'Enter') {
+                evento.preventDefault();
+                messageInput.focus();
+            }
+        });
+
+    </script>
+</body>
+</html>
